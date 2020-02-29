@@ -14,8 +14,8 @@ class Engine(object):
 
     def __init__(self, config):
         self.config = config  # model configuration
-        self._metron_s = MetronAtK(top_k=10)
-        self._metron_t = MetronAtK(top_k=10)
+        self._metron_s = MetronAtK(top_k=config['top_k'])
+        self._metron_t = MetronAtK(top_k=config['top_k'])
         self._writer = SummaryWriter(log_dir='runs/{}'.format(config['alias']))  # tensorboard writer
         self._writer.add_text('config', str(config), 0)
         self.opt = use_optimizer(self.model, config)
@@ -57,7 +57,7 @@ class Engine(object):
             if batch_id%1000==0:
                 print('[Training Epoch {}] Batch {}, Loss {}'.format(epoch_id, batch_id, loss))
             total_loss += loss
-        print('[Training Epoch {}], Loss {}'.format(epoch_id, total_loss/))
+        print('[Training Epoch {}], Loss {}'.format(epoch_id, total_loss/batch_id))
         self._writer.add_scalar('model/loss', total_loss, epoch_id)
 
     def evaluate(self, evaluate_data, epoch_id):
