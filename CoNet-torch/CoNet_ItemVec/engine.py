@@ -105,14 +105,18 @@ class Engine(object):
                                        negative_users.data.view(-1).tolist(),
                                        negative_items_t.data.view(-1).tolist(),
                                        negative_scores_t.data.view(-1).tolist()]
-        hit_ratio_s, ndcg_s = self._metron_s.cal_hit_ratio(), self._metron_s.cal_ndcg()
-        hit_ratio_t, ndcg_t = self._metron_t.cal_hit_ratio(), self._metron_t.cal_ndcg()
+        hit_ratio_s, ndcg_s, mrr_s = self._metron_s.cal_hit_ratio(), self._metron_s.cal_ndcg(), self._metron_s.cal_mrr()
+        hit_ratio_t, ndcg_t, mrr_t = self._metron_t.cal_hit_ratio(), self._metron_t.cal_ndcg(), self._metron_t.cal_mrr()
+
         self._writer.add_scalar('performance/HR_s', hit_ratio_s, epoch_id)
         self._writer.add_scalar('performance/NDCG_s', ndcg_s, epoch_id)
+        self._writer.add_scalar('performance/MRR_s', mrr_s, epoch_id)
         self._writer.add_scalar('performance/HR_t', hit_ratio_t, epoch_id)
         self._writer.add_scalar('performance/NDCG_t', ndcg_t, epoch_id)
-        print('[Evluating Epoch {}] HR_s = {:.4f}, NDCG_s = {:.4f}, HR_t = {:.4f}, NDCG_t = {:.4f}'.format(epoch_id, hit_ratio_s, ndcg_s, hit_ratio_t, ndcg_t))
-        return hit_ratio_s, ndcg_s, hit_ratio_t, ndcg_t
+        self._writer.add_scalar('performance/MRR_t', mrr_t, epoch_id)
+        print('[Evluating Epoch {}] HR_s = {:.4f}, NDCG_s = {:.4f}, MRR_s = {:.4f}, HR_t = {:.4f}, NDCG_t = {:.4f}, MRR_t = {:.4f}'.format(
+            epoch_id, hit_ratio_s, ndcg_s, mrr_s, hit_ratio_t, ndcg_t, mrr_t))
+        return hit_ratio_s, ndcg_s, mrr_s, hit_ratio_t, ndcg_t, mrr_t
 
     def save(self, alias, epoch_id, hit_ratio_s, ndcg_s,hit_ratio_t, ndcg_t):
         assert hasattr(self, 'model'), 'Please specify the exact model !'
