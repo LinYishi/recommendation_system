@@ -137,7 +137,10 @@ class SampleGenerator(object):
                 #
                 item_vecs_s.append(self.vec_dict_s[row.negatives_t[i]])
                 item_vecs_t.append(self.vec_dict_t[row.negatives_t[i]])
-
+        # 手动shuffle一遍
+        dd = list(zip(users, items_s, ratings_s, items_t, ratings_t, item_vecs_s, item_vecs_t))
+        random.shuffle(dd)
+        users[:], items_s[:], ratings_s[:], items_t[:], ratings_t[:], item_vecs_s[:], item_vecs_t[:] = zip(*dd)
         dataset = UserItemRatingDataset(user_tensor=torch.LongTensor(users),
                                         item_tensor_s=torch.LongTensor(items_s),
                                         target_tensor_s=torch.FloatTensor(ratings_s),
