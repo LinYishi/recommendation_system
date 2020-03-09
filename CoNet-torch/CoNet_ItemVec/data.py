@@ -60,8 +60,8 @@ class SampleGenerator(object):
         self.user_pool = set(self.ratings_s['userId'].unique())
         self.item_pool_s = set(self.ratings_s['itemId'].unique())
         self.item_pool_t = set(self.ratings_t['itemId'].unique())
-        self.item_pool_s_top1w = set(random.sample(self.ratings_s['itemId'],10000))
-        self.item_pool_t_top1w = set(random.sample(self.ratings_t['itemId'],10000))
+        self.item_pool_s_top1w = set(random.sample(self.ratings_s['itemId'].tolist(),10000))
+        self.item_pool_t_top1w = set(random.sample(self.ratings_t['itemId'].tolist(),10000))
         #self.item_pool_s_top1w=set([x[0] for x in Counter(self.ratings_s['itemId']).most_common(10000)])
         #self.item_pool_t_top1w = set([x[0] for x in Counter(self.ratings_t['itemId']).most_common(10000)])
         # create negative item samples for NCF learning
